@@ -1,2 +1,6 @@
-# archiso-zfs
-Use DKMS to compile zfs kernel module on any archiso
+# How to use
+
+Boot on any archiso
+```
+curl -s https://eoli3n.github.io/archzfs/init | bash
+```
