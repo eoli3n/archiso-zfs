@@ -13,7 +13,7 @@ DKMS needs ``linux-headers`` to be able to build the module.
 
 ### How does it work
 
-It uses [Arch Linux Archive](https://wiki.archlinux.org/index.php/Arch_Linux_Archive#How_to_restore_all_packages_to_a_specific_date) to install the right version of ``linux-headers`` required by DKMS.
+It uses [Arch Linux Archive](https://wiki.archlinux.org/index.php/Arch_Linux_Archive#How_to_restore_all_packages_to_a_specific_date) to install the matching version of ``linux-headers`` required by DKMS.
 
 ### How to use
 
