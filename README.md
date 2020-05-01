@@ -8,12 +8,12 @@ This project lets you include the zfs kernel module on any archiso without creat
 ### Archzfs
 
 The [Archzfs](https://github.com/archzfs/archzfs/wiki) unofficial user repository allows one to install the ZFS kernel module in multiple ways.  
-We need compile current kernel zfs module using [DKMS method](https://wiki.archlinux.org/index.php/ZFS#DKMS), to let it match current booted kernel.
-DKMS needs ``linux-headers`` of the currently booted system to be able to build the module.
+We need to compile zfs module using [DKMS method](https://wiki.archlinux.org/index.php/ZFS#DKMS) for the kernel used by the running archiso.
+DKMS needs ``linux-headers`` to be able to build the module.
 
 ### How does it work
 
-It uses [Arch Linux Archive](https://wiki.archlinux.org/index.php/Arch_Linux_Archive#How_to_restore_all_packages_to_a_specific_date), to be able to install ``linux-headers`` required by DKMS.
+It uses [Arch Linux Archive](https://wiki.archlinux.org/index.php/Arch_Linux_Archive#How_to_restore_all_packages_to_a_specific_date) to install the right version of ``linux-headers`` required by DKMS.
 
 ### How to use
 
