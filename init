@@ -9,16 +9,16 @@ print () {
     echo -e "\n\033[1m> $1\033[0m\n"
 }
 
-print "Test if archiso is running"
+print "Testing if archiso is running"
 
 grep archiso /proc/cmdline
 
-print "Set mirrorlist to current archiso date"
+print "Seting mirrorlist to current archiso date"
 
 iso_date=$(date +%Y/%m/%d -d "$(LANG=C pacman -Qi linux |sed -n 's/^Install Date\s*: //p')")
 echo "Server=https://archive.archlinux.org/repos/$iso_date/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
 
-print "Add archzfs repo"
+print "Adding archzfs repo"
 
 cat >> /etc/pacman.conf <<"EOF"
 [archzfs]
@@ -27,27 +27,29 @@ Server = http://mirror.sum7.eu/archlinux/archzfs/archzfs/x86_64
 Server = https://mirror.biocrafting.net/archlinux/archzfs/archzfs/x86_64
 EOF
 
-print "Sign archzfs"
+print "Fetching archzfs signing keys"
 
 pacman-key --recv-keys F75D9D76
 pacman-key --lsign-key F75D9D76
 
-print "Update lists and upgrade"
+print "Updating pacman lists and upgrade"
 
 pacman -Syyu --noconfirm
 
-print "Increase cowspace to half of RAM"
+print "Increasing cowspace to half of RAM"
 
 mount -o remount,size=50% /run/archiso/cowspace
 
-print "Install current kernel headers"
+print "Installing current kernel headers"
 
 pacman -S --noconfirm linux-headers
 
-print "Install zfs-dkms"
+print "Installing zfs-dkms"
 
 pacman -S --noconfirm zfs-dkms
 
-print "Load zfs kernel module"
+print "Loading zfs kernel module"
 
 modprobe zfs
+
+print "ZFS module is working"
