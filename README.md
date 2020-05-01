@@ -7,17 +7,17 @@ This project lets you include the zfs kernel module on any archiso without creat
 
 ### Archzfs
 
-The [Archzfs](https://github.com/archzfs/archzfs/wiki) unofficial user repository allows one to install the ZFS kernel module in multiple ways.  
-We need to compile zfs module using [DKMS method](https://wiki.archlinux.org/index.php/ZFS#DKMS) for the kernel used by the running archiso.
-DKMS needs ``linux-headers`` to be able to build the module.
+The [Archzfs](https://github.com/archzfs/archzfs/wiki) unofficial user repository offers multiple ways to install the ZFS kernel module.  
+We need to compile zfs module using [DKMS method](https://wiki.archlinux.org/index.php/ZFS#DKMS), so it will work with the running kernel.  
+In order to build the module, DKMS needs the ``linux-headers`` package for the running kernel.
 
 ### How does it work
 
-It uses [Arch Linux Archive](https://wiki.archlinux.org/index.php/Arch_Linux_Archive#How_to_restore_all_packages_to_a_specific_date) to install the matching version of ``linux-headers`` required by DKMS.
+It uses [Arch Linux Archive](https://wiki.archlinux.org/index.php/Arch_Linux_Archive#How_to_restore_all_packages_to_a_specific_date) to install the ``linux-headers`` package required for DKMS. 
 
 ### How to use
 
-Boot on any archiso, and use
+Boot on any archiso, and run
 ```
 curl -s https://eoli3n.github.io/archzfs/init | bash
 ```
@@ -26,4 +26,4 @@ curl -s https://eoli3n.github.io/archzfs/init | bash
 
 Yes, the Arch Linux Archive have a limited brandwidth, but at least, it is automated.
 A better solution would be to store archives on the Archzfs repo.
-More details here : https://github.com/archzfs/archzfs/issues/337
+More details here: https://github.com/archzfs/archzfs/issues/337
