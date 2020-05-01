@@ -34,7 +34,7 @@ pacman-key --lsign-key F75D9D76
 
 print "Update lists and upgrade"
 
-pacman -Syu --no-confirm
+pacman -Syu --noconfirm
 
 print "Increase cowspace to half of RAM"
 
