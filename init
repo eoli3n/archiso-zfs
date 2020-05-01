@@ -13,7 +13,7 @@ print "Testing if archiso is running"
 
 grep archiso /proc/cmdline
 
-print "Seting mirrorlist to current archiso date"
+print "Setting mirrorlist to current archiso date"
 
 iso_date=$(date +%Y/%m/%d -d "$(LANG=C pacman -Qi linux |sed -n 's/^Install Date\s*: //p')")
 echo "Server=https://archive.archlinux.org/repos/$iso_date/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
