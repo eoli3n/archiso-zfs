@@ -17,12 +17,16 @@ It uses [Arch Linux Archive](https://wiki.archlinux.org/index.php/Arch_Linux_Arc
 
 ### How to use
 
-Boot on any archiso
+Boot on any archiso, and use
 ```
 curl -s https://eoli3n.github.io/archzfs/init | bash
 ```
+This is a mirror with an easier url. Instead you can use a more hacky way
 
-### Wow, that's long
+```
+```
+
+### Wow, that's slow...
 
 Yes, Arch Linux Archive have a limited brandwidth, but at least, it is automated.
 A better solution would be to store archives on Archzfs repo.
