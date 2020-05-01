@@ -7,9 +7,8 @@ This project let you include zfs kernel module on any archiso without creating a
 
 ### Archzfs
 
-Archzfs unofficial user repository allow one to install ZFS kernel module in multiple ways.  
+Archzfs unofficial user repository allows one to install ZFS kernel module in multiple ways.  
 We will compile current kernel zfs module using DKMS method.
-More details here : https://github.com/archzfs/archzfs/issues/337
 DKMS needs ``linux-headers`` of the currently booted system to be able to build the module.
 
 ### How does it work
@@ -22,3 +21,9 @@ Boot on any archiso
 ```
 curl -s https://eoli3n.github.io/archzfs/init | bash
 ```
+
+### Wow, that's long
+
+Yes, Arch Linux Archive have a limited brandwidth, but at least, it is automated.
+A better solution would be to store archives on Archzfs repo.
+More details here : https://github.com/archzfs/archzfs/issues/337
