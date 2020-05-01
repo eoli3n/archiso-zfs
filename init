@@ -43,11 +43,11 @@ mount -o remount,size=$ram_half /run/archiso/cowspace
 
 print "Install current kernel headers"
 
-pacman -S --no-confirm linux-headers
+pacman -S --noconfirm linux-headers
 
 print "Install zfs-dkms"
 
-pacman -S --no-confirm zfs-dkms
+pacman -S --noconfirm zfs-dkms
 
 print "Load zfs kernel module"
 
