@@ -38,9 +38,10 @@ pacman -Syyu --noconfirm
 
 print "Increase cowspace to half of RAM"
 
-ram=$(free | grep 'Mem' | awk '{print $2}')
+ram=$(free -b | grep 'Mem' | awk '{print $2}')
 ram_half=$(echo "$ram / 2" | bc)
-mount -o remount,size=$ram_half /run/archiso/cowspace
+ram_half_h=$(numfmt --to=si $ram_half)
+mount -o remount,size=$ram_half_h /run/archiso/cowspace
 
 print "Install current kernel headers"
 
