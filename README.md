@@ -11,7 +11,7 @@ The [Archzfs](https://github.com/archzfs/archzfs/wiki) unofficial user repositor
 We need to compile the zfs module using [DKMS method](https://wiki.archlinux.org/index.php/ZFS#DKMS), so it will work with the running kernel.  
 In order to build the module, DKMS needs the ``linux-headers`` package for the running kernel.
 
-### How does it works
+### How does it work
 
 The script uses [Arch Linux Archive](https://wiki.archlinux.org/index.php/Arch_Linux_Archive#How_to_restore_all_packages_to_a_specific_date) to install the ``linux-headers`` package required for DKMS. 
 
