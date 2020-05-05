@@ -3,8 +3,6 @@
 # github.com/eoli3n
 # Thanks to CalimeroTeknik on #archlinux-fr, FFY00 on #archlinux-projects, JohnDoe2 on #regex
 
-set -e
-
 print () {
     echo -e "\n\033[1m> $1\033[0m\n"
 }
