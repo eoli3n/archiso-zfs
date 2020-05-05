@@ -16,7 +16,9 @@ print "Increasing cowspace to half of RAM"
 mount -o remount,size=50% /run/archiso/cowspace
 
 # Get running kernel version
+# https://github.com/archzfs/archzfs/issues/337#issuecomment-624312576
 kernel_version=$(pacman -Qi linux | sed -n 's/^Version\s*: //p')
+kernel_version_fixed=$(sed 's/-/\./' <<< $kernel_version)
 
 print "Current kernel version is $kernel_version"
 
