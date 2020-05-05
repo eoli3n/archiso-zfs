@@ -34,7 +34,7 @@ urls="http://archzfs.com/archzfs/x86_64/ http://archzfs.com/archive_archzfs/"
 for url in $urls
 do
 
-    Print "Searching on $url..."
+    print "Searching on $url..."
 
     # Query url and try to match package
     package=$(curl -s "$url" | grep -Po "$regex")
