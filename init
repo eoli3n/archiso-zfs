@@ -1,7 +1,7 @@
 #!/bin/bash
 # This script load zfs kernel module for any archiso.
 # github.com/eoli3n
-# Thanks to CalimeroTeknik on #archlinux-fr
+# Thanks to CalimeroTeknik on #archlinux-fr, FFY00 on #archlinux-projects, JohnDoe2 on #regex
 
 set -e
 
@@ -13,13 +13,41 @@ print "Testing if archiso is running"
 
 grep archiso /proc/cmdline
 
-print "Install zfs module"
-
-pacman -U http://archzfs.com/archive_archzfs/zfs-linux-.*_$(pacman -Qi linux | sed -n 's/^Version\s*: //p')-x86_64.pkg.*
-
 print "Increasing cowspace to half of RAM"
 
 mount -o remount,size=50% /run/archiso/cowspace
+
+print "Install zfs module"
+
+# Get running kernel version
+kernel_version=$(pacman -Qi linux | sed -n 's/^Version\s*: //p')
+
+# Set regex to match package
+regex='href="\Kzfs-linux-[0-9].*?'"$kernel_version"'.*?(?!.+\.sig)x86_64[^\"]+'
+
+# Search kernel on archzfs repos
+urls="http://archzfs.com/archzfs/x86_64/ http://archzfs.com/archive_archzfs/"
+
+# Loop search
+for url in $urls
+do
+
+    # Query url and try to match package
+    package=$(curl -s "$url" | grep -Po "$regex")
+
+    # If a package is found
+    if [[ ! -z $package ]]
+    then
+        # Build package url
+        package_url="$url$package"
+
+        print "Installing package $package..."
+        pacman -U "$package_url"
+
+        # Break loop
+        break
+    fi
+done
 
 print "Loading zfs kernel module"
 
