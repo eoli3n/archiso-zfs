@@ -15,8 +15,6 @@ print "Increasing cowspace to half of RAM"
 
 mount -o remount,size=50% /run/archiso/cowspace
 
-print "Searching zfs module"
-
 # Get running kernel version
 kernel_version=$(pacman -Qi linux | sed -n 's/^Version\s*: //p')
 
