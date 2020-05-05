@@ -1,0 +1,2 @@
+- add community repo to kernel build date in any cases
+- fallback to DKMS method
