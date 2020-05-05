@@ -17,20 +17,24 @@ print "Increasing cowspace to half of RAM"
 
 mount -o remount,size=50% /run/archiso/cowspace
 
-print "Install zfs module"
+print "Searching zfs module"
 
 # Get running kernel version
 kernel_version=$(pacman -Qi linux | sed -n 's/^Version\s*: //p')
 
+print "Current kernel version is $kernel_version"
+
 # Set regex to match package
 regex='href="\Kzfs-linux-[0-9].*?'"$kernel_version"'.*?(?!.+\.sig)x86_64[^\"]+'
 
-# Search kernel on archzfs repos
+# Set archzfs URLs list
 urls="http://archzfs.com/archzfs/x86_64/ http://archzfs.com/archive_archzfs/"
 
 # Loop search
 for url in $urls
 do
+
+    Print "Searching on $url..."
 
     # Query url and try to match package
     package=$(curl -s "$url" | grep -Po "$regex")
@@ -38,19 +42,32 @@ do
     # If a package is found
     if [[ ! -z $package ]]
     then
-        # Build package url
-        package_url="$url$package"
 
-        print "Installing package $package..."
-        pacman -U "$package_url"
+        print "$package found"
 
         # Break loop
         break
     fi
 done
 
-print "Loading zfs kernel module"
+# If a package is found
+if [[ ! -z $package ]]
+then
+    # Build package url
+    package_url="$url$package"
 
-modprobe zfs
+    print "Installing package $package..."
 
-print "ZFS module is working"
+    # Install package
+    pacman -U "$package_url"
+
+    print "Loading zfs kernel module"
+
+    # Load kernel module
+    modprobe zfs
+
+    print "ZFS module is working"
+
+else
+    print "No module found for current kernel version on Archzfs repos"
+fi
