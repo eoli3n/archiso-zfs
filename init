@@ -20,6 +20,20 @@ mount -o remount,size=50% /run/archiso/cowspace
 kernel_version=$(pacman -Qi linux | sed -n 's/^Version\s*: //p')
 kernel_version_fixed=$(sed 's/-/\./' <<< $kernel_version)
 
+print "Adding archzfs repo"
+
+cat >> /etc/pacman.conf <<"EOF"
+[archzfs]
+Server = http://archzfs.com/archzfs/x86_64
+Server = http://mirror.sum7.eu/archlinux/archzfs/archzfs/x86_64
+Server = https://mirror.biocrafting.net/archlinux/archzfs/archzfs/x86_64
+EOF
+
+print "Fetching archzfs signing keys"
+
+pacman-key --recv-keys F75D9D76
+pacman-key --lsign-key F75D9D76
+
 print "Current kernel version is $kernel_version"
 
 # Set regex to match package
