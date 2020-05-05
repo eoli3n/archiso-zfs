@@ -13,37 +13,13 @@ print "Testing if archiso is running"
 
 grep archiso /proc/cmdline
 
-print "Adding archzfs repo and archives"
+print "Install zfs module"
 
-cat >> /etc/pacman.conf <<"EOF"
-[archzfs]
-Server = http://archzfs.com/archzfs/x86_64
-Server = http://mirror.sum7.eu/archlinux/archzfs/archzfs/x86_64
-Server = https://mirror.biocrafting.net/archlinux/archzfs/archzfs/x86_64
-[archzfs_archives]
-Server = http://archzfs.com/archive_archzfs
-EOF
-
-print "Fetching archzfs signing keys"
-
-pacman-key --recv-keys F75D9D76
-pacman-key --lsign-key F75D9D76
-
-print "Updating pacman lists and upgrade"
-
-pacman -Syyu --noconfirm
+pacman -U http://archzfs.com/archive_archzfs/zfs-linux-.*_$(pacman -Qi linux | sed -n 's/^Version\s*: //p')-x86_64.pkg.*
 
 print "Increasing cowspace to half of RAM"
 
 mount -o remount,size=50% /run/archiso/cowspace
-
-print "Installing current kernel headers"
-
-pacman -S --noconfirm linux-headers
-
-print "Installing zfs-dkms"
-
-pacman -S --noconfirm zfs-dkms
 
 print "Loading zfs kernel module"
 
