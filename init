@@ -23,7 +23,7 @@ kernel_version_fixed=$(sed 's/-/\./' <<< $kernel_version)
 print "Current kernel version is $kernel_version"
 
 # Set regex to match package
-regex='href="\Kzfs-linux-[0-9].*?'"$kernel_version"'.*?(?!.+\.sig)x86_64[^\"]+'
+regex='href="\Kzfs-linux-[0-9].*?'"$kernel_version_fixed"'.*?(?!.+\.sig)x86_64[^\"]+'
 
 # Set archzfs URLs list
 urls="http://archzfs.com/archzfs/x86_64/ http://archzfs.com/archive_archzfs/"
