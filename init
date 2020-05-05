@@ -62,9 +62,7 @@ then
     print "Loading zfs kernel module"
 
     # Load kernel module
-    modprobe zfs
-
-    print "ZFS module is working"
+    modprobe zfs && print "ZFS module is working"
 
 else
     print "No module found for current kernel version on Archzfs repos"
