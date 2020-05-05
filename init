@@ -15,7 +15,13 @@ grep archiso /proc/cmdline
 
 print "Setting mirrorlist to current archiso date"
 
-iso_date=$(date +%Y/%m/%d -d "$(LANG=C pacman -Qi linux |sed -n 's/^Install Date\s*: //p')")
+# Temp fix as https://archive.archlinux.org/repos/2020/05/01/ is empty because of a bug
+if [[ $1 =~ ^[0-9]{4}/[0-9]{2}/[0-9]{2}$ ]]
+then
+    iso_date=$1
+else
+    iso_date=$(date +%Y/%m/%d -d "$(LANG=C pacman -Qi linux |sed -n 's/^Install Date\s*: //p')")
+fi 
 echo "Server=https://archive.archlinux.org/repos/$iso_date/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
 
 print "Adding archzfs repo"
