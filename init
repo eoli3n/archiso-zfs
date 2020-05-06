@@ -38,6 +38,15 @@ print "Current kernel version is $kernel_version"
 
 # Set regex to match package
 regex='href="\Kzfs-linux-[0-9].*?'"$kernel_version_fixed"'.*?(?!.+\.sig)x86_64[^\"]+'
+# href="               # match href="
+# \K                   # don't return anything matched prior to this point
+# zfs-linux-\d         # find me zfs-linux-#
+# .*?                  # match anything but newlines 0 or more times, as few times as possible (non-greedy)
+# '"$kernel_version"'  # match version and escape with shell
+# .*?                  # match anything but newlines 0 or more times, as few times as possible (non-greedy)
+# (?![^"\n]+\.sig)     # remove .sig matches
+# x86_64               # now match architecture
+# [^\n"]+              # continue matching anything but newlines and ", 1 or more times, until end 
 
 # Set archzfs URLs list
 urls="http://archzfs.com/archzfs/x86_64/ http://archzfs.com/archive_archzfs/"
@@ -49,7 +58,7 @@ do
     print "Searching on $url..."
 
     # Query url and try to match package
-    package=$(curl -s "$url" | grep -Po "$regex")
+    package=$(curl -s "$url" | grep -Po "$regex" | tail -n 1)
 
     # If a package is found
     if [[ ! -z $package ]]
