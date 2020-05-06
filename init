@@ -3,6 +3,8 @@
 # github.com/eoli3n
 # Thanks to CalimeroTeknik on #archlinux-fr, FFY00 on #archlinux-projects, JohnDoe2 on #regex
 
+set -e
+
 ### Functions
 
 print () {
@@ -38,8 +40,8 @@ EOF
     
     print "Fetching archzfs signing keys"
     
-    pacman-key --recv-keys F75D9D76 2>/dev/null
-    pacman-key --lsign-key F75D9D76 2>/dev/null
+    pacman-key --recv-keys F75D9D76 &>/dev/null
+    pacman-key --lsign-key F75D9D76 &>/dev/null
     pacman -Sy > /dev/null
 }
 
@@ -170,7 +172,7 @@ then
         print "Installing zfs-utils"
 
         # Install packages
-        pacman -U "$zfs_utils_url" --noconfirm > /dev/null
+        pacman -U "$zfs_utils_url" --noconfirm $> /dev/null
         pacman -U "$zfs_linux_package" --noconfirm > /dev/null && zfs=1
 
     fi
