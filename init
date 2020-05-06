@@ -13,20 +13,20 @@ get_running_kernel_version () {
 # Returns running kernel version
 
     # Get running kernel version
-    kernel_version=$(LANG=C pacman -Qi linux | sed -n 's/^Version\s*: //p')
+    local kernel_version=$(LANG=C pacman -Qi linux | sed -n 's/^Version\s*: //p')
     
     print "Current kernel version is $kernel_version"
 
-    return "$kernel_version"
+    echo "$kernel_version"
 }
 
 get_iso_build_date () {
 # Returns running kernel build date formated as 'YYYY/MM/DD'
 
     # Get running kernel build date
-    kernel_date=$(date +%Y/%m/%d -d "$(LANG=C pacman -Qi linux |sed -n 's/^Install Date\s*: //p')")
+    local kernel_date=$(date +%Y/%m/%d -d "$(LANG=C pacman -Qi linux |sed -n 's/^Install Date\s*: //p')")
 
-    return "$kernel_date"
+    echo "$kernel_date"
 }
 
 init_archzfs () {
@@ -63,10 +63,9 @@ init_archlinux_archive () {
 search_package () {
 # $1 is package name to search
 # $2 is version to match
-# It returns package url
 
     # Set regex to match package
-    regex='href="\K'"$1"'-[0-9].*?'"$2"'.*?(?!.+\.sig)x86_64[^\"]+'
+    local regex='href="\K'"$1"'-[0-9].*?'"$2"'.*?(?!.+\.sig)x86_64[^\"]+'
     # href="               # match href="
     # \K                   # don't return anything matched prior to this point
     # '"$1"'-[0-9]         # find me package-# escaped by shell
@@ -78,7 +77,7 @@ search_package () {
     # [^\n"]+              # continue matching anything but newlines and ", 1 or more times, until end 
     
     # Set archzfs URLs list
-    urls="http://archzfs.com/archzfs/x86_64/ http://archzfs.com/archive_archzfs/"
+    local urls="http://archzfs.com/archzfs/x86_64/ http://archzfs.com/archive_archzfs/"
     
     # Loop search
     for url in $urls
@@ -87,7 +86,7 @@ search_package () {
         print "Searching on $url..."
     
         # Query url and try to match package
-        package=$(curl -s "$url" | grep -Po "$regex" | tail -n 1)
+        local package=$(curl -s "$url" | grep -Po "$regex" | tail -n 1)
     
         # If a package is found
         if [[ -n $package ]]
@@ -97,8 +96,6 @@ search_package () {
     
             # Build package url
             package_url="$url$package"
-
-            return "$package_url"
         fi
     done
 }
@@ -107,17 +104,15 @@ download_package () {
 # $1 is package url to download in tmp
 # It returns downloaded file path
 
-    filename="${url##*/}"
+    local filename="${url##*/}"
 
     # Download package in tmp
     wget "$1" -P /tmp
 
     # Set out file
-    output="/tmp/$filename"
+    package_file="/tmp/$filename"
 
     print "Downloading $output ..."
-
-    return "$output"
 }
 
 ### Main
@@ -139,19 +134,19 @@ kernel_version=$(get_running_kernel_version)
 kernel_version_fixed="${kernel_version//-/\.}"
 
 # Search zfs-linux package matching running kernel version
-zfs_linux_package_url=$(search_package "zfs-linux" "$kernel_version_fixed")
+search_package "zfs-linux" "$kernel_version_fixed"
 
 # If a package is found
-if [[ -n $zfs_linux_package_url ]]
+if [[ -n $package_url ]]
 then
 
     # Download package
-    zfs_linux_package=$(download_package "zfs-linux" "$kernel_version_fixed")
+    download_package $package_url
 
     print "Extracting $zfs_linux_package"
 
     # Extract package
-    tar xvf "$zfs_linux_package" -C /tmp/extract
+    tar xvf "$package_file" -C /tmp/extract
 
     print "Searching zfs-utils version required"
 
@@ -162,9 +157,9 @@ then
     rm -Rf /tmp/extract
 
     # Search zfs-utils package matching zfs-linux package dependency
-    zfs_utils_url=$(search_package "zfs-utils" "$zfs_utils_version")
+    search_package "zfs-utils" "$zfs_utils_version"
 
-    if [[ -n $zfs_utils_url ]]
+    if [[ -n $package_url ]]
     then
 
         print "Installing zfs-utils"
