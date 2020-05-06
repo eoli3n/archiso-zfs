@@ -169,9 +169,11 @@ then
 
         print "Installing zfs-utils"
 
-        # Install packages
-        pacman --quiet -U "$zfs_utils_url" --noconfirm
-        pacman --quiet -U "$zfs_linux_package" --noconfirm && zfs=1
+        # Install packages with set x
+        set +x
+        pacman -U "$zfs_utils_url" --noconfirm > /dev/null
+        pacman -U "$zfs_linux_package" --noconfirm > /dev/null && zfs=1
+        set -x
 
     fi
 fi
