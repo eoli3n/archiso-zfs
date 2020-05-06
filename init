@@ -136,19 +136,21 @@ kernel_version_fixed="${kernel_version//-/\.}"
 
 # Search zfs-linux package matching running kernel version
 search_package "zfs-linux" "$kernel_version_fixed"
+zfs_linux_url="$package_url"
 
 # If a package is found
-if [[ -n $package_url ]]
+if [[ -n $zfs_linux_url ]]
 then
 
     # Download package
-    download_package $package_url
+    download_package $zfs_linux_url
+    zfs_linux_package="$package_file"
 
     print "Extracting $zfs_linux_package"
 
     # Extract package
     mkdir -p /tmp/extract
-    tar xvf "$package_file" -C /tmp/extract
+    tar xvf "$zfs_linux_package" -C /tmp/extract
 
     print "Searching zfs-utils version required"
 
@@ -160,8 +162,9 @@ then
 
     # Search zfs-utils package matching zfs-linux package dependency
     search_package "zfs-utils" "$zfs_utils_version"
+    zfs_utils_url="$package_url"
 
-    if [[ -n $package_url ]]
+    if [[ -n $zfs_utils_url ]]
     then
 
         print "Installing zfs-utils"
@@ -169,7 +172,6 @@ then
         # Install packages
         pacman -U "$zfs_utils_url" --noconfirm
         pacman -U "$zfs_linux_package" --noconfirm && zfs=1
-
 
     fi
 fi
