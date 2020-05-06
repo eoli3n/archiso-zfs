@@ -24,7 +24,7 @@ get_iso_build_date () {
 # Returns running kernel build date formated as 'YYYY/MM/DD'
 
     # Get running kernel build date
-    kernel_date=(date +%Y/%m/%d -d "$(LANG=C pacman -Qi linux |sed -n 's/^Install Date\s*: //p')")
+    kernel_date=$(date +%Y/%m/%d -d "$(LANG=C pacman -Qi linux |sed -n 's/^Install Date\s*: //p')")
 
     return "$kernel_date"
 }
@@ -54,18 +54,11 @@ init_archlinux_archive () {
     repo="Server=https://archive.archlinux.org/repos/$1/\$repo/os/\$arch"
 
     # If repo exists, set it, if not, return False
-    curl -s $repo && echo $repo > /etc/pacman.d/mirrorlist || return "False"
-    return "True"
+    curl -s "$repo" && echo "$repo" > /etc/pacman.d/mirrorlist || return 1
+
+    return 0
 
 }
-
-init_repositories () {
-# $1 is date formated as 'YYYY/MM/DD'
-    init_archzfs
-    init_archlinux_archive 
-    pacman -Sy
-}
-
 
 search_package () {
 # $1 is package name to search
@@ -136,6 +129,9 @@ grep archiso /proc/cmdline > /dev/null
 print "Increasing cowspace to half of RAM"
 
 mount -o remount,size=50% /run/archiso/cowspace
+
+# Init archzfs repository
+init_archzfs
 
 # Search kernel package
 # https://github.com/archzfs/archzfs/issues/337#issuecomment-624312576
