@@ -66,10 +66,10 @@ search_package () {
 
     
 
-    local regex='href="\K'"$1"'-[0-9].*?'"$2"'.*?(?!.+\.sig)x86_64[^\"]+'
+    local regex='href="\K'"$1"'-.*?'"$2"'.*?(?!.+\.sig)x86_64[^\"]+'
     # href="               # match href="
     # \K                   # don't return anything matched prior to this point
-    # '"$1"'-[0-9]         # find me package-# escaped by shell
+    # '"$1"'-              # find me '$package-' escaped by shell
     # .*?                  # match anything but newlines 0 or more times, as few times as possible (non-greedy)
     # '"$2"'               # match version escaped by shell
     # .*?                  # match anything but newlines 0 or more times, as few times as possible (non-greedy)
@@ -113,7 +113,7 @@ download_package () {
     # Set out file
     package_file="/tmp/$filename"
 
-    print "Downloading $package_file ..."
+    print "Downloading to $package_file ..."
 }
 
 ### Main
