@@ -173,6 +173,9 @@ then
         pacman -U "$zfs_utils_url" --noconfirm
         pacman -U "$zfs_linux_package" --noconfirm && zfs=1
 
+        # Break loop
+        break
+
     fi
 fi
 
