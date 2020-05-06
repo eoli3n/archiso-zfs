@@ -42,8 +42,8 @@ EOF
     
     print "Fetching archzfs signing keys"
     
-    pacman-key --recv-keys F75D9D76
-    pacman-key --lsign-key F75D9D76
+    pacman-key --recv-keys F75D9D76 2>/dev/null
+    pacman-key --lsign-key F75D9D76 2>/dev/null
 }
 
 init_archlinux_archive () {
