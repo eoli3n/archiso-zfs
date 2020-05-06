@@ -172,7 +172,7 @@ then
         print "Installing zfs-utils"
 
         # Install packages
-        pacman -U "$zfs_utils_url" --noconfirm $> /dev/null
+        pacman -U "$zfs_utils_url" --noconfirm &> /dev/null
         pacman -U "$zfs_linux_package" --noconfirm > /dev/null && zfs=1
 
     fi
