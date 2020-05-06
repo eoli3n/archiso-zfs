@@ -38,8 +38,6 @@ Server = http://mirror.sum7.eu/archlinux/archzfs/archzfs/x86_64
 Server = https://mirror.biocrafting.net/archlinux/archzfs/archzfs/x86_64
 EOF
     
-    print "Fetching archzfs signing keys"
-    
     pacman-key --recv-keys F75D9D76 &>/dev/null
     pacman-key --lsign-key F75D9D76 &>/dev/null
     pacman -Sy > /dev/null
@@ -92,7 +90,7 @@ search_package () {
         if [[ -n $package ]]
         then
     
-            print "$package found"
+            print "Package \"$package\" found"
     
             # Build package url
             package_url="$url$package"
@@ -154,7 +152,7 @@ then
     mkdir -p /tmp/extract
     tar xvf "$zfs_linux_package" -C /tmp/extract > /dev/null
 
-    print "Searching zfs-utils version required"
+    print "Searching zfs-utils"
 
     # Get zfs-utils dependency version
     zfs_utils_version=$(grep 'depend = zfs-utils' /tmp/extract/.PKGINFO | grep -o '[[:digit:]].*')
@@ -181,9 +179,7 @@ fi
 if [[ "$zfs" == "1" ]]
 then
 
-    print "Loading zfs kernel module"
-
-    modprobe zfs && print "ZFS module is working"
+    modprobe zfs && echo -e "\e[32mZFS is ready"
 
 else
     print "No ZFS module found"
