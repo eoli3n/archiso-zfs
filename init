@@ -144,11 +144,10 @@ then
     download_package $zfs_linux_url
     zfs_linux_package="$package_file"
 
-    print "Extracting $zfs_linux_package"
+    print "Extracting zfs-utils version from zfs-linux PKGINFO"
 
-    # Extract package
-    mkdir -p /tmp/extract
-    tar xvf "$zfs_linux_package" -C /tmp/extract > /dev/null
+    # Extract package PKGINFO
+    zfs_utils_version=$(bsdtar -qxO -f "$zfs_linux_package" .PKGINFO | grep -Po 'depend = zfs-utils=\K.*')
 
     print "Searching zfs-utils"
 
