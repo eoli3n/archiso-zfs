@@ -105,7 +105,7 @@ download_package () {
 # $1 is package url to download in tmp
 # It returns downloaded file path
 
-    local filename="${url##*/}"
+    local filename="${1##*/}"
 
     # Download package in tmp
     wget "$1" -P /tmp
