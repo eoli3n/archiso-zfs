@@ -97,6 +97,9 @@ search_package () {
     
             # Build package url
             package_url="$url$package"
+
+            # Break loop
+            break
         fi
     done
 }
@@ -172,9 +175,6 @@ then
         # Install packages
         pacman -U "$zfs_utils_url" --noconfirm
         pacman -U "$zfs_linux_package" --noconfirm && zfs=1
-
-        # Break loop
-        break
 
     fi
 fi
