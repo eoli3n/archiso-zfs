@@ -169,12 +169,11 @@ then
     if [[ -n $zfs_utils_url ]]
     then
 
-        print "Installing zfs-utils"
+        print "Installing zfs-utils and zfs-linux"
 
         # Install packages
         pacman -U "$zfs_utils_url" --noconfirm &> /dev/null
         pacman -U "$zfs_linux_package" --noconfirm > /dev/null && zfs=1
-
     fi
 fi
 
