@@ -150,7 +150,7 @@ then
 
     # Extract package
     mkdir -p /tmp/extract
-    tar xvf "$zfs_linux_package" -C /tmp/extract
+    tar xvf "$zfs_linux_package" -C /tmp/extract > /dev/null
 
     print "Searching zfs-utils version required"
 
