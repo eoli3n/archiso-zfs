@@ -168,15 +168,20 @@ then
 
         # Install packages
         pacman -U "$zfs_utils_url" --noconfirm
-        pacman -U "$zfs_linux_package" --noconfirm
+        pacman -U "$zfs_linux_package" --noconfirm && zfs=1
 
-        print "Loading zfs kernel module"
 
-        # Load kernel module
-        modprobe zfs && print "ZFS module is working"
-    else
-        print "No module found for current kernel version on Archzfs repos"
     fi
+fi
+
+# Load kernel module
+if [[ "$zfs" == "1" ]]
+then
+
+    print "Loading zfs kernel module"
+
+    modprobe zfs && print "ZFS module is working"
+
 else
-    print "No module found for current kernel version on Archzfs repos"
+    print "No ZFS module found"
 fi
