@@ -146,16 +146,8 @@ then
 
     print "Extracting zfs-utils version from zfs-linux PKGINFO"
 
-    # Extract package PKGINFO
+    # Extract zfs-utils version from zfs-linux PKGINFO
     zfs_utils_version=$(bsdtar -qxO -f "$zfs_linux_package" .PKGINFO | grep -Po 'depend = zfs-utils=\K.*')
-
-    print "Searching zfs-utils"
-
-    # Get zfs-utils dependency version
-    zfs_utils_version=$(grep 'depend = zfs-utils' /tmp/extract/.PKGINFO | grep -o '[[:digit:]].*')
-
-    # Clean extracted dir
-    rm -Rf /tmp/extract
 
     # Search zfs-utils package matching zfs-linux package dependency
     search_package "zfs-utils" "$zfs_utils_version"
