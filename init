@@ -179,7 +179,7 @@ fi
 if [[ "$zfs" == "1" ]]
 then
 
-    modprobe zfs && echo -e "\e[32mZFS is ready"
+    modprobe zfs && echo -e "\n\e[32mZFS is ready\n"
 
 else
     print "No ZFS module found"
