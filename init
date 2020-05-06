@@ -113,7 +113,7 @@ download_package () {
     # Set out file
     package_file="/tmp/$filename"
 
-    print "Downloading $output ..."
+    print "Downloading $package_file ..."
 }
 
 ### Main
@@ -147,6 +147,7 @@ then
     print "Extracting $zfs_linux_package"
 
     # Extract package
+    mkdir -p /tmp/extract
     tar xvf "$package_file" -C /tmp/extract
 
     print "Searching zfs-utils version required"
