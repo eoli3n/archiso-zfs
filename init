@@ -79,7 +79,7 @@ search_package () {
     for url in $urls
     do
     
-        print "Searching on $url..."
+        print "Searching $1 on $url..."
     
         # Query url and try to match package
         local package=$(curl -s "$url" | grep -Po "$regex" | tail -n 1)
