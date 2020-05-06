@@ -40,7 +40,7 @@ EOF
     
     pacman-key --recv-keys F75D9D76 2>/dev/null
     pacman-key --lsign-key F75D9D76 2>/dev/null
-    pacman -Sy --quiet
+    pacman -Sy > /dev/null
 }
 
 init_archlinux_archive () {
@@ -108,7 +108,7 @@ download_package () {
     local filename="${1##*/}"
 
     # Download package in tmp
-    wget "$1" -P /tmp
+    wget "$1" --quiet -P /tmp
 
     # Set out file
     package_file="/tmp/$filename"
@@ -169,11 +169,11 @@ then
 
         print "Installing zfs-utils"
 
-        # Install packages with set x
-        set +x
+        # Install packages
+        set -x
         pacman -U "$zfs_utils_url" --noconfirm > /dev/null
         pacman -U "$zfs_linux_package" --noconfirm > /dev/null && zfs=1
-        set -x
+        set +x
 
     fi
 fi
