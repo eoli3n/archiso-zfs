@@ -63,19 +63,16 @@ search_package () {
 # $2 is version to match
 
     # Set regex to match package
-
-    
-
-    local regex='href="\K'"$1"'-.*?'"$2"'.*?(?!.+\.sig)x86_64[^\"]+'
+    local regex='href="\K(?![^"]*\.sig)'"$1"'-(?=\d)[^"]*'"$2"'[^"]*x86_64[^"]*'
     # href="               # match href="
     # \K                   # don't return anything matched prior to this point
-    # '"$1"'-              # find me '$package-' escaped by shell
-    # .*?                  # match anything but newlines 0 or more times, as few times as possible (non-greedy)
+    # (?![^"]*\.sig)       # remove .sig matches
+    # '"$1"'-(?=\d)        # find me '$package-' escaped by shell and ensure that after "-" is a digit
+    # [^"]*                # match anything between '"'
     # '"$2"'               # match version escaped by shell
-    # .*?                  # match anything but newlines 0 or more times, as few times as possible (non-greedy)
-    # (?![^"\n]+\.sig)     # remove .sig matches
+    # [^"]*                # match anything between '"'
     # x86_64               # now match architecture
-    # [^\n"]+              # continue matching anything but newlines and ", 1 or more times, until end 
+    # [^"]*                # match anything between '"'
     
     # Set archzfs URLs list
     local urls="http://archzfs.com/archzfs/x86_64/ http://archzfs.com/archive_archzfs/"
