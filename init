@@ -8,7 +8,7 @@ set -e
 ### Functions
 
 print () {
-    echo -e "\n\033[1m> $1\033[0m\n"
+    echo -e "\n\033[1m> $1\033[0m"
 }
 
 get_running_kernel_version () {
