@@ -24,7 +24,7 @@ Boot on any archiso system, and run:
 curl -s https://eoli3n.github.io/archzfs/init | bash
 ```
 
-# Related
+### Related
 
 - [Archzfs issue : Dynamically build/load ZFS module on default archiso #337](https://github.com/archzfs/archzfs/issues/337)
 - [Archlinux Wiki : Install Arch Linux On ZFS](https://wiki.archlinux.org/index.php/Install_Arch_Linux_on_ZFS#Get_ZFS_module_on_archiso_system)
