@@ -107,7 +107,9 @@ download_package () {
     local filename="${1##*/}"
 
     # Download package in tmp
-    wget "$1" --quiet -P /tmp
+    cd /tmp
+    curl -sO "$1"
+    cd -
 
     # Set out file
     package_file="/tmp/$filename"
