@@ -41,7 +41,7 @@ Server = http://archzfs.com/archzfs/x86_64
 Server = http://mirror.sum7.eu/archlinux/archzfs/archzfs/x86_64
 Server = https://mirror.biocrafting.net/archlinux/archzfs/archzfs/x86_64
 EOF
-    pacman -Sy > /dev/null
+    pacman -Sy &>/dev/null
 }
 
 init_archlinux_archive () {
@@ -121,7 +121,7 @@ download_package () {
 
 print "Testing if archiso is running"
 
-grep archiso /proc/cmdline > /dev/null
+grep archiso /proc/cmdline >/dev/null
 
 print "Increasing cowspace to half of RAM"
 
@@ -162,8 +162,8 @@ then
         print "Installing zfs-utils and zfs-linux"
 
         # Install packages
-        pacman -U "$zfs_utils_url" --noconfirm &> /dev/null
-        pacman -U "$zfs_linux_package" --noconfirm > /dev/null && zfs=1
+        pacman -U "$zfs_utils_url" --noconfirm &>/dev/null
+        pacman -U "$zfs_linux_package" --noconfirm &>/dev/null && zfs=1
     fi
 fi
 
