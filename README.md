@@ -28,7 +28,7 @@ curl -s https://eoli3n.github.io/archzfs/init | bash
 
 To run the script in verbose mode, use:
 ```
-curl -s https://eoli3n.github.io/archzfs/init | sed 's- &>/dev/null--' | bash
+curl -s https://eoli3n.github.io/archzfs/init | sed 's- &>/dev/null--' | bash &> debug.log
 ```
 
 ### Related
