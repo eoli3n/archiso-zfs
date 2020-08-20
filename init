@@ -15,7 +15,7 @@ get_running_kernel_version () {
 # Returns running kernel version
 
     # Get running kernel version
-    kernel_version=$(LANG=C pacman -Qi linux | sed -n 's/^Version\s*: //p')
+    kernel_version=$(uname -r)
     
     print "Current kernel version is $kernel_version"
 }
