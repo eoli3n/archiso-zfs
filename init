@@ -33,7 +33,7 @@ init_archzfs () {
     
     pacman -Sy archlinux-keyring --noconfirm &>/dev/null
     pacman-key --populate archlinux &>/dev/null
-    pacman-key --recv-keys F75D9D76 --keyserver hkp://pool.sks-keyservers.net:80 &>/dev/null
+    pacman-key --recv-keys F75D9D76 --keyserver keyserver.ubuntu.com &>/dev/null
     pacman-key --lsign-key F75D9D76 &>/dev/null
     cat >> /etc/pacman.conf <<"EOF"
 [archzfs]
