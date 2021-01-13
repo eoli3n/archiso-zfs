@@ -28,7 +28,10 @@ get_iso_build_date () {
 }
 
 init_archzfs () {
-
+    if pacman -Sl archzfs >/dev/null 2>&1; then
+        print "archzfs repo was already added"
+        return
+    fi
     print "Adding archzfs repo"
     
     pacman -Sy archlinux-keyring --noconfirm &>/dev/null
