@@ -15,7 +15,7 @@ get_running_kernel_version () {
 # Returns running kernel version
 
     # Get running kernel version
-    kernel_version=$(LANG=C pacman -Qi linux | sed -n 's/^Version\s*: //p')
+    kernel_version=$(uname -r)
     
     print "Current kernel version is $kernel_version"
 }
@@ -28,12 +28,15 @@ get_iso_build_date () {
 }
 
 init_archzfs () {
-
+    if pacman -Sl archzfs >/dev/null 2>&1; then
+        print "archzfs repo was already added"
+        return
+    fi
     print "Adding archzfs repo"
     
     pacman -Sy archlinux-keyring --noconfirm &>/dev/null
     pacman-key --populate archlinux &>/dev/null
-    pacman-key --recv-keys F75D9D76 --keyserver hkp://pool.sks-keyservers.net:80 &>/dev/null
+    pacman-key --recv-keys F75D9D76 --keyserver keyserver.ubuntu.com &>/dev/null
     pacman-key --lsign-key F75D9D76 &>/dev/null
     cat >> /etc/pacman.conf <<"EOF"
 [archzfs]
@@ -41,7 +44,7 @@ Server = http://archzfs.com/archzfs/x86_64
 Server = http://mirror.sum7.eu/archlinux/archzfs/archzfs/x86_64
 Server = https://mirror.biocrafting.net/archlinux/archzfs/archzfs/x86_64
 EOF
-    pacman -Sy > /dev/null
+    pacman -Sy &>/dev/null
 }
 
 init_archlinux_archive () {
@@ -107,7 +110,9 @@ download_package () {
     local filename="${1##*/}"
 
     # Download package in tmp
-    wget "$1" --quiet -P /tmp
+    cd /tmp
+    curl -sO "$1"
+    cd -
 
     # Set out file
     package_file="/tmp/$filename"
@@ -119,7 +124,7 @@ download_package () {
 
 print "Testing if archiso is running"
 
-grep archiso /proc/cmdline > /dev/null
+grep archiso /proc/cmdline >/dev/null
 
 print "Increasing cowspace to half of RAM"
 
@@ -160,8 +165,8 @@ then
         print "Installing zfs-utils and zfs-linux"
 
         # Install packages
-        pacman -U "$zfs_utils_url" --noconfirm &> /dev/null
-        pacman -U "$zfs_linux_package" --noconfirm > /dev/null && zfs=1
+        pacman -U "$zfs_utils_url" --noconfirm &>/dev/null
+        pacman -U "$zfs_linux_package" --noconfirm &>/dev/null && zfs=1
     fi
 fi
 

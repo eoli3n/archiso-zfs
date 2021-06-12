@@ -24,6 +24,13 @@ Boot on any archiso system, and run:
 curl -s https://eoli3n.github.io/archzfs/init | bash
 ```
 
+### Debug
+
+To run the script in verbose mode, use:
+```
+curl -s https://eoli3n.github.io/archzfs/init | sed 's- &>/dev/null--' | bash &> debug.log
+```
+
 ### Related
 
 - [Archzfs issue : Dynamically build/load ZFS module on default archiso #337](https://github.com/archzfs/archzfs/issues/337)
