@@ -120,6 +120,17 @@ download_package () {
     print "Downloading to $package_file ..."
 }
 
+dkms_method () {
+
+    print "Installing linux-headers from archive.org for current running kernel"
+
+    pacman -U "https://archive.org/download/archlinux_pkg_linux-headers/$1" --noconfirm
+
+    print "Install zfs-dkms"
+
+    pacman -S zfs-dkms --noconfirm
+}
+
 ### Main
 
 print "Testing if archiso is running"
@@ -137,6 +148,7 @@ init_archzfs
 # https://github.com/archzfs/archzfs/issues/337#issuecomment-624312576
 get_running_kernel_version
 kernel_version_fixed="${kernel_version//-/\.}"
+kernel_version_fixed_for_headers="${kernel_version/-/\.}"
 
 # Search zfs-linux package matching running kernel version
 search_package "zfs-linux" "$kernel_version_fixed"
@@ -168,6 +180,13 @@ then
         pacman -U "$zfs_utils_url" --noconfirm &>/dev/null
         pacman -U "$zfs_linux_package" --noconfirm &>/dev/null && zfs=1
     fi
+else
+
+    # DKMS fallback
+    print "No zfs-linux package was found for current running kernel, fallback on DKMS method"
+    print "Installing linux-headers and zfs-dkms"
+    dkms_method "$kernel_version_fixed_for_headers"
+
 fi
 
 # Load kernel module
