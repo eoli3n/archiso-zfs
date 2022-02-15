@@ -124,7 +124,7 @@ dkms_method () {
 
     print "Installing linux-headers from archive.org for current running kernel"
 
-    pacman -U "https://archive.org/download/archlinux_pkg_linux-headers/$1" --noconfirm
+    pacman -U "https://archive.org/download/archlinux_pkg_linux-headers/$1-x86_64.pkg.tar.zst" --noconfirm
 
     print "Install zfs-dkms"
 
