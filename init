@@ -120,15 +120,12 @@ download_package () {
     print "Downloading to $package_file ..."
 }
 
-dkms_method () {
+dkms_init () {
 
     print "Installing linux-headers from archive.org for current running kernel"
 
     pacman -U "https://archive.org/download/archlinux_pkg_linux-headers/$1-x86_64.pkg.tar.zst" --noconfirm
 
-    print "Install zfs-dkms"
-
-    pacman -S zfs-dkms --noconfirm
 }
 
 ### Main
@@ -185,7 +182,12 @@ else
     # DKMS fallback
     print "No zfs-linux package was found for current running kernel, fallback on DKMS method"
     print "Installing linux-headers and zfs-dkms"
-    dkms_method "$kernel_version_fixed_for_headers"
+    dkms_init "$kernel_version_fixed_for_headers"
+
+    print "Install zfs-dkms"
+    
+    # Install package
+    pacman -S zfs-dkms --noconfirm && zfs=1
 
 fi
 
