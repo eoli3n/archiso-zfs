@@ -127,7 +127,8 @@ dkms_init () {
     pacman_cache_date=$(stat -c '%y' /var/cache/pacman/pkg | cut -d' ' -f1 | sed 's:-:/:g')
 
     echo "Server=https://archive.archlinux.org/repos/$pacman_cache_date/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
-    pacman -Syyu --noconfirm base-devel
+    pacman -Syyuu --noconfirm
+    pacman -S --noconfirm base-devel
 
 }
 
