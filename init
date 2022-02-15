@@ -185,6 +185,7 @@ else
     print "Install zfs-dkms"
     
     # Install package
+    pacman -S base-devel --noconfirm
     pacman -S zfs-dkms --noconfirm && zfs=1
 
 fi
