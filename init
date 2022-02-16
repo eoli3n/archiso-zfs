@@ -141,7 +141,7 @@ dkms_init () {
     pacman -Syyuu --noconfirm
 
     print "Install base-devel"
-    pacman -S --noconfirm base-devel
+    pacman -S --noconfirm base-devel linux-headers
 
 }
 
@@ -198,7 +198,7 @@ else
 
     # DKMS fallback
     print "No zfs-linux package was found for current running kernel, fallback on DKMS method"
-    dkms_init "$kernel_version_fixed_for_headers"
+    dkms_init
 
     print "Install zfs-dkms"
     
