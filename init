@@ -124,10 +124,14 @@ dkms_init () {
 
     #print "Installing linux-headers for current running kernel"
     #pacman -U "https://archive.org/download/archlinux_pkg_linux-headers/linux-headers-$1-x86_64.pkg.tar.zst" --noconfirm
+    print "Extract repo date and init Archlinux Archive repository"
     pacman_cache_date=$(stat -c '%y' /var/cache/pacman/pkg | cut -d' ' -f1 | sed 's:-:/:g')
+    init_archlinux_archive "$pacman_cache_date"
 
-    echo "Server=https://archive.archlinux.org/repos/$pacman_cache_date/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
+    print "Download Archlinux Archives package lists and upgrade"
     pacman -Syyuu --noconfirm
+
+    print "Install base-devel"
     pacman -S --noconfirm base-devel
 
 }
