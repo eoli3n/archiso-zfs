@@ -130,9 +130,8 @@ download_package () {
 }
 
 dkms_init () {
+# Init everything to be able to install zfs-dkms
 
-    #print "Installing linux-headers for current running kernel"
-    #pacman -U "https://archive.org/download/archlinux_pkg_linux-headers/linux-headers-$1-x86_64.pkg.tar.zst" --noconfirm
     print "Init Archlinux Archive repository"
     archiso_version=$(sed 's-\.-/-g' /version)
     init_archlinux_archive "$archiso_version"
