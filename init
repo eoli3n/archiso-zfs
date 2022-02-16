@@ -52,10 +52,10 @@ init_archlinux_archive () {
 # Returns False if repo does not exists
 
     # Set repo
-    repo="https://archive.archlinux.org/repos/$1"
+    repo="https://archive.archlinux.org/repos/$1/"
 
     # If repo exists, set it
-    curl -s "$repo" && echo "Server=$repo/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
+    curl -s "$repo" && echo "Server=$repo\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
 
 }
 
