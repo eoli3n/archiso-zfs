@@ -1,1 +1,2 @@
 - test dkms fallback method
+  - match zfs-linux-dkms with current running kernel : http://sprunge.us/kPWTJf
