@@ -2,7 +2,7 @@
 
 If you want to install Archlinux on ZFS, you need to deal with the [ZFS licensing problem](https://wiki.archlinux.org/index.php/ZFS). The kernel module isn't included in the default archiso image, you need to [include it](https://wiki.archlinux.org/index.php/ZFS#Embed_the_archzfs_packages_into_an_archiso) into a custom archiso image to be able to install ZFS.
 
-I wrote an article about [archiso netbooting](https://eoli3n.github.io/archlinux/2020/04/25/recovery.html).  
+I wrote an article about [archiso netbooting](https://eoli3n.github.io/2020/04/25/recovery.html).  
 This script lets you include the zfs kernel module on any archiso image without creating a custom one.
 
 ### Archzfs

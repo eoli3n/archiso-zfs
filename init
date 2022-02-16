@@ -148,7 +148,7 @@ dkms_init () {
 
 print "Testing if archiso is running"
 
-grep archiso /proc/cmdline >/dev/null
+grep 'arch.*iso' /proc/cmdline >/dev/null
 
 print "Increasing cowspace to half of RAM"
 
