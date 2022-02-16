@@ -5,6 +5,8 @@
 
 set -e
 
+exec &> >(tee "debug.log")
+
 ### Functions
 
 print () {
