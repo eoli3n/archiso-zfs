@@ -24,6 +24,8 @@ Boot on any archiso system, and run:
 $ curl -s https://eoli3n.github.io/archzfs/init | bash
 ```
 
+![dkms-screenshot](./screenshot.png)
+
 ### Debug
 
 To run the script in verbose mode, use:
