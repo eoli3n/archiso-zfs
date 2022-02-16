@@ -123,9 +123,9 @@ dkms_init () {
 
     #print "Installing linux-headers for current running kernel"
     #pacman -U "https://archive.org/download/archlinux_pkg_linux-headers/linux-headers-$1-x86_64.pkg.tar.zst" --noconfirm
-    print "Extract repo date and init Archlinux Archive repository"
-    pacman_cache_date=$(stat -c '%y' /var/cache/pacman/pkg | cut -d' ' -f1 | sed 's:-:/:g')
-    init_archlinux_archive "$pacman_cache_date"
+    print "Init Archlinux Archive repository"
+    archiso_version=$(sed 's-\.-/-g' /version)
+    init_archlinux_archive "$archiso_version"
 
     print "Download Archlinux Archives package lists and upgrade"
     pacman -Syyuu --noconfirm
