@@ -51,8 +51,16 @@ init_archlinux_archive () {
 # $1 is date formated as 'YYYY/MM/DD'
 # Returns False if repo does not exists
 
+    # Archlinux Archive workaround for 2022/02/01
+    if [[ "$1" == "2022/02/01" ]]
+    then
+        version="2022/02/02"
+    else
+        version="$1"
+    fi
+
     # Set repo
-    repo="https://archive.archlinux.org/repos/$1/"
+    repo="https://archive.archlinux.org/repos/$version/"
 
     # If repo exists, set it
     curl -s "$repo" &>/dev/null && echo "Server=$repo\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
