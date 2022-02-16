@@ -21,14 +21,24 @@ In that case, the script uses [Arch Linux Archive](https://wiki.archlinux.org/in
 
 Boot on any archiso system, and run:
 ```
-curl -s https://eoli3n.github.io/archzfs/init | bash
+$ curl -s https://eoli3n.github.io/archzfs/init | bash
 ```
 
 ### Debug
 
 To run the script in verbose mode, use:
 ```
-curl -s https://eoli3n.github.io/archzfs/init | sed 's- &>/dev/null--' | bash &> debug.log
+$ curl -s https://eoli3n.github.io/archzfs/init | sed 's- &>/dev/null--' | bash &> debug.log
+```
+
+### Dev
+
+```bash
+$ loadkeys fr
+# In pacman.conf, comment SigLevel line
+# Set "SigLevel = Never"
+$ pacman -Syy git
+# In pacman.conf, restore Siglevel line
 ```
 
 ### Related
