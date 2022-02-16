@@ -15,20 +15,30 @@ In order to build the module, DKMS needs the ``linux-headers`` package for the r
 
 It extracts running kernel version and try to find a matching ZFS module in ``Archzfs`` repositories.
 If it doesn't, it fallbacks to the DKMS build of the ZFS module.
-In that case, the script uses [Arch Linux Archive](https://wiki.archlinux.org/index.php/Arch_Linux_Archive#How_to_restore_all_packages_to_a_specific_date) to install the ``linux-headers`` package required for DKMS. 
+In that case, the script uses [Arch Linux Archive](https://wiki.archlinux.org/index.php/Arch_Linux_Archive#How_to_restore_all_packages_to_a_specific_date) to install the ``linux-headers`` and ``base-devel`` packages required for DKMS. You need at least ~6Gb RAM to use that method to be able to store packages in cowspace.
 
 ### How to use
 
 Boot on any archiso system, and run:
 ```
-curl -s https://eoli3n.github.io/archzfs/init | bash
+$ curl -s https://eoli3n.github.io/archzfs/init | bash
 ```
 
 ### Debug
 
 To run the script in verbose mode, use:
 ```
-curl -s https://eoli3n.github.io/archzfs/init | sed 's- &>/dev/null--' | bash &> debug.log
+$ curl -s https://eoli3n.github.io/archzfs/init | sed 's- &>/dev/null--' | bash &> debug.log
+```
+
+### Dev
+
+```bash
+$ loadkeys fr
+# In pacman.conf, comment SigLevel line
+# Set "SigLevel = Never"
+$ pacman -Syy git
+# In pacman.conf, restore Siglevel line
 ```
 
 ### Related

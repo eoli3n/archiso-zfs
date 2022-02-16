@@ -5,6 +5,8 @@
 
 set -e
 
+exec &> >(tee "debug.log")
+
 ### Functions
 
 print () {
@@ -51,12 +53,19 @@ init_archlinux_archive () {
 # $1 is date formated as 'YYYY/MM/DD'
 # Returns False if repo does not exists
 
+    # Archlinux Archive workaround for 2022/02/01
+    if [[ "$1" == "2022/02/01" ]]
+    then
+        version="2022/02/02"
+    else
+        version="$1"
+    fi
+
     # Set repo
-    repo="Server=https://archive.archlinux.org/repos/$1/\$repo/os/\$arch"
-    pacman -Syy --quiet
+    repo="https://archive.archlinux.org/repos/$version/"
 
     # If repo exists, set it
-    curl -s "$repo" && echo "$repo" > /etc/pacman.d/mirrorlist
+    curl -s "$repo" &>/dev/null && echo "Server=$repo\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
 
 }
 
@@ -120,6 +129,21 @@ download_package () {
     print "Downloading to $package_file ..."
 }
 
+dkms_init () {
+# Init everything to be able to install zfs-dkms
+
+    print "Init Archlinux Archive repository"
+    archiso_version=$(sed 's-\.-/-g' /version)
+    init_archlinux_archive "$archiso_version"
+
+    print "Download Archlinux Archives package lists and upgrade"
+    pacman -Syyuu --noconfirm
+
+    print "Install base-devel"
+    pacman -S --noconfirm base-devel linux-headers
+
+}
+
 ### Main
 
 print "Testing if archiso is running"
@@ -137,6 +161,7 @@ init_archzfs
 # https://github.com/archzfs/archzfs/issues/337#issuecomment-624312576
 get_running_kernel_version
 kernel_version_fixed="${kernel_version//-/\.}"
+kernel_version_fixed_for_headers="${kernel_version/-/\.}"
 
 # Search zfs-linux package matching running kernel version
 search_package "zfs-linux" "$kernel_version_fixed"
@@ -168,6 +193,17 @@ then
         pacman -U "$zfs_utils_url" --noconfirm &>/dev/null
         pacman -U "$zfs_linux_package" --noconfirm &>/dev/null && zfs=1
     fi
+else
+
+    # DKMS fallback
+    print "No zfs-linux package was found for current running kernel, fallback on DKMS method"
+    dkms_init
+
+    print "Install zfs-dkms"
+    
+    # Install package
+    pacman -S zfs-dkms --noconfirm && zfs=1
+
 fi
 
 # Load kernel module
