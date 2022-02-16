@@ -36,7 +36,9 @@ init_archzfs () {
     fi
     print "Adding archzfs repo"
     
-    pacman -Sy archlinux-keyring --noconfirm &>/dev/null
+    # Disable Sig check
+    sed -i 's/^SigLevel.*/SigLevel = Never/' /etc/pacman.conf
+    pacman -Syy archlinux-keyring --noconfirm &>/dev/null
     pacman-key --populate archlinux &>/dev/null
     pacman-key --recv-keys F75D9D76 --keyserver keyserver.ubuntu.com &>/dev/null
     pacman-key --lsign-key F75D9D76 &>/dev/null
@@ -161,7 +163,6 @@ init_archzfs
 # https://github.com/archzfs/archzfs/issues/337#issuecomment-624312576
 get_running_kernel_version
 kernel_version_fixed="${kernel_version//-/\.}"
-kernel_version_fixed_for_headers="${kernel_version/-/\.}"
 
 # Search zfs-linux package matching running kernel version
 search_package "zfs-linux" "$kernel_version_fixed"
