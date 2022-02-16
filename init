@@ -139,10 +139,10 @@ dkms_init () {
     init_archlinux_archive "$archiso_version"
 
     print "Download Archlinux Archives package lists and upgrade"
-    pacman -Syyuu --noconfirm
+    pacman -Syyuu --noconfirm &>/dev/null
 
     print "Install base-devel"
-    pacman -S --noconfirm base-devel linux-headers
+    pacman -S --noconfirm base-devel linux-headers &>/dev/null
 
 }
 
@@ -203,7 +203,7 @@ else
     print "Install zfs-dkms"
     
     # Install package
-    pacman -S zfs-dkms --noconfirm && zfs=1
+    pacman -S zfs-dkms --noconfirm &>/dev/null && zfs=1
 
 fi
 
