@@ -22,13 +22,6 @@ get_running_kernel_version () {
     print "Current kernel version is $kernel_version"
 }
 
-get_iso_build_date () {
-# Returns running kernel build date formated as 'YYYY/MM/DD'
-
-    # Get running kernel build date
-    kernel_date=$(date +%Y/%m/%d -d "$(LANG=C pacman -Qi linux |sed -n 's/^Install Date\s*: //p')")
-}
-
 init_archzfs () {
     if pacman -Sl archzfs >/dev/null 2>&1; then
         print "archzfs repo was already added"
