@@ -30,11 +30,10 @@ init_archzfs () {
     print "Adding archzfs repo"
     
     # Disable Sig check
-    sed -i 's/^SigLevel.*/SigLevel = Never/' /etc/pacman.conf
     pacman -Syy archlinux-keyring --noconfirm &>/dev/null
-    #pacman-key --populate archlinux &>/dev/null
-    #pacman-key --recv-keys F75D9D76 --keyserver keyserver.ubuntu.com &>/dev/null
-    #pacman-key --lsign-key F75D9D76 &>/dev/null
+    pacman-key --populate archlinux &>/dev/null
+    pacman-key --recv-keys F75D9D76 --keyserver keyserver.ubuntu.com &>/dev/null
+    pacman-key --lsign-key F75D9D76 &>/dev/null
     cat >> /etc/pacman.conf <<"EOF"
 [archzfs]
 Server = http://archzfs.com/archzfs/x86_64

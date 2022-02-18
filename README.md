@@ -17,6 +17,9 @@ It extracts running kernel version and try to find a matching ZFS module in ``Ar
 If it doesn't, it fallbacks to the DKMS build of the ZFS module.
 In that case, the script uses [Arch Linux Archive](https://wiki.archlinux.org/index.php/Arch_Linux_Archive#How_to_restore_all_packages_to_a_specific_date) to install the ``linux-headers`` and ``base-devel`` packages required for DKMS. You need at least ~6Gb RAM to use that method to be able to store packages in cowspace.
 
+In some very specific cases, you won't be able to get ZFS module working for a specific archiso version.  
+In that case, just switch to the previous month iso.
+
 ### How to use
 
 Boot on any archiso system, and run:
