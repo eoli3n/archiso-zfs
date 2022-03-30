@@ -32,7 +32,7 @@ init_archzfs () {
     # Disable Sig check
     pacman -Syy archlinux-keyring --noconfirm &>/dev/null
     pacman-key --populate archlinux &>/dev/null
-    pacman-key --recv-keys F75D9D76 --keyserver keyserver.ubuntu.com &>/dev/null
+    pacman-key --recv-keys F75D9D76 &>/dev/null
     pacman-key --lsign-key F75D9D76 &>/dev/null
     cat >> /etc/pacman.conf <<"EOF"
 [archzfs]
