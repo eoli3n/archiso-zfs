@@ -9,8 +9,33 @@ exec &> >(tee "debug.log")
 
 ### Functions
 
+ask () {
+    read -p "> $1 " -r
+    echo
+}
+
 print () {
     echo -e "\n\033[1m> $1\033[0m"
+}
+
+download_and_execute_arch-config () {
+    ask "Do you want to download and execute arch-config?"
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+
+        if [[ ! -f /usr/bin/git ]]
+        then
+
+            pacman -S git --noconfirm &>/dev/null
+
+        fi
+
+        git clone https://github.com/stevleibelt/arch-config
+        cd arch-config/scripts/zfs/install
+        ./01-configure.sh
+        ./02-install.sh
+
+    fi
 }
 
 get_running_kernel_version () {
@@ -204,6 +229,8 @@ if [[ "$zfs" == "1" ]]
 then
 
     modprobe zfs && echo -e "\n\e[32mZFS is ready\n"
+
+    download_and_execute_arch-config
 
 else
     print "No ZFS module found"
