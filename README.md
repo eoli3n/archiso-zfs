@@ -24,27 +24,23 @@ In that case, just switch to the previous month iso.
 
 Boot on any archiso system, and run:
 ```
-$ curl -s https://eoli3n.github.io/archzfs/init | bash
+$ curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash
 ```
 
 ![dkms-screenshot](./screenshot.png)
 
 ### Debug
 
+By default, command outputs are redirected to /dev/null.
+
 To run the script in verbose mode, use:
 ```
-$ curl -s https://eoli3n.github.io/archzfs/init | bash -s -- -v
+$ curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash -s -- -v
 ```
 
 ### Dev
 
-```bash
-$ loadkeys fr
-# In pacman.conf, comment SigLevel line
-# Set "SigLevel = Never"
-$ pacman -Syy git
-# In pacman.conf, restore Siglevel line
-```
+To easily test in a VM, on your host with qemu/libvirt and vagrant installed, use [https://github.com/eoli3n/arch-config/tree/master/vagrant](https://github.com/eoli3n/arch-config/tree/master/vagrant).
 
 ### Related
 
