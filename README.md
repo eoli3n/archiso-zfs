@@ -36,7 +36,7 @@ To run the script in verbose mode, use:
 ```
 $ curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash -s -- -v
 ```
-Running the script produces a ``debug.log`` file.
+Running the script produces a ``debug.log`` file in the current directory.
 To upload this easily, you can
 
 ```
