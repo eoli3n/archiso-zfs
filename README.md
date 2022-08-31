@@ -32,12 +32,11 @@ $ curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bas
 ### Debug
 
 By default, command outputs are redirected to /dev/null.
-
 To run the script in verbose mode, use:
 ```
 $ curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash -s -- -v
 ```
-Running the script produce a ``debug.log`` file.
+Running the script produces a ``debug.log`` file.
 To upload this easily, you can
 
 ```
@@ -48,7 +47,8 @@ And then paste me the url in your issue.
 
 ### Dev
 
-To easily test in a VM, on your host with qemu/libvirt and vagrant installed, use [https://github.com/eoli3n/arch-config/tree/master/vagrant](https://github.com/eoli3n/arch-config/tree/master/vagrant).
+To easily generate a VM with the latest archiso, to test the script in, on your host with qemu/libvirt and vagrant installed :
+Use [https://github.com/eoli3n/arch-config/tree/master/vagrant](https://github.com/eoli3n/arch-config/tree/master/vagrant).
 
 ### Related
 
