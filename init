@@ -3,11 +3,22 @@
 # github.com/eoli3n
 # Thanks to CalimeroTeknik on #archlinux-fr, FFY00 on #archlinux-projects, JohnDoe2 on #regex
 
-set -e
-
 exec &> >(tee "debug.log")
 
+### Vars
+
+verbose=0
+
 ### Functions
+
+usage () {
+    cat << EOF
+Usage: ${0##*/} [-v]
+
+    -v    increase verbosity
+    -h    show this usage
+EOF
+}
 
 print () {
     echo -e "\n\033[1m> $1\033[0m"
@@ -23,29 +34,30 @@ get_running_kernel_version () {
 }
 
 init_archzfs () {
-    if pacman -Sl archzfs >/dev/null 2>&1; then
+    if pacman -Sl archzfs >&3; then
         print "archzfs repo was already added"
-        return
+        return 0
     fi
-    print "Adding archzfs repo"
+    print "Add archzfs repo"
     
     # Disable Sig check
-    pacman -Syy archlinux-keyring --noconfirm &>/dev/null
-    pacman-key --populate archlinux &>/dev/null
-    pacman-key --recv-keys F75D9D76 &>/dev/null
-    pacman-key --lsign-key F75D9D76 &>/dev/null
+    pacman -Syy archlinux-keyring --noconfirm >&3 || return 1
+    pacman-key --populate archlinux >&3 || return 1
+    pacman-key --recv-keys F75D9D76 >&3 || return 1
+    pacman-key --lsign-key F75D9D76 >&3 || return 1
     cat >> /etc/pacman.conf <<"EOF"
 [archzfs]
 Server = http://archzfs.com/archzfs/x86_64
 Server = http://mirror.sum7.eu/archlinux/archzfs/archzfs/x86_64
 Server = https://mirror.biocrafting.net/archlinux/archzfs/archzfs/x86_64
 EOF
-    pacman -Sy &>/dev/null
+    pacman -Sy >&3 || return 1
+    return 0
 }
 
 init_archlinux_archive () {
 # $1 is date formated as 'YYYY/MM/DD'
-# Returns False if repo does not exists
+# Returns 1 if repo does not exists
 
     # Archlinux Archive workaround for 2022/02/01
     if [[ "$1" == "2022/02/01" ]]
@@ -59,8 +71,15 @@ init_archlinux_archive () {
     repo="https://archive.archlinux.org/repos/$version/"
 
     # If repo exists, set it
-    curl -s "$repo" &>/dev/null && echo "Server=$repo\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
+    if curl -s "$repo" >&3
+    then
+        echo "Server=$repo\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
+    else
+        print "Repository $repo is not reachable or doesn't exist."
+        return 1
+    fi
 
+    return 0
 }
 
 search_package () {
@@ -99,28 +118,30 @@ search_package () {
     
             # Build package url
             package_url="$url$package"
-
-            # Break loop
-            break
+            return 0
         fi
     done
+
+    # If no package found
+    return 1
 }
 
 download_package () {
 # $1 is package url to download in tmp
-# It returns downloaded file path
+
+    print "Download to $package_file ..."
 
     local filename="${1##*/}"
 
     # Download package in tmp
     cd /tmp
-    curl -sO "$1"
+    curl -sO "$1" || return 1
     cd -
 
     # Set out file
     package_file="/tmp/$filename"
 
-    print "Downloading to $package_file ..."
+    return 0
 }
 
 dkms_init () {
@@ -128,28 +149,61 @@ dkms_init () {
 
     print "Init Archlinux Archive repository"
     archiso_version=$(sed 's-\.-/-g' /version)
-    init_archlinux_archive "$archiso_version"
+    init_archlinux_archive "$archiso_version" || return 1
 
     print "Download Archlinux Archives package lists and upgrade"
-    pacman -Syyuu --noconfirm &>/dev/null
+    pacman -Syyuu --noconfirm >&3 || return 1
 
     print "Install base-devel"
-    pacman -S --noconfirm base-devel linux-headers git &>/dev/null
+    pacman -S --noconfirm base-devel linux-headers git >&3 || return 1
 
+    return 0
 }
+
+### Getopts
+
+while getopts "vh" option; do
+    case "${option}" in
+        v)
+            verbose=$((verbose + 1))
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage
+            exit 0
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+### Verbose mode
+
+if [[ "$verbose" -gt 0 ]]
+then
+    exec 3>&1
+else
+    exec 3>/dev/null
+fi
 
 ### Main
 
-print "Testing if archiso is running"
+# Test if archiso is running
 
-grep 'arch.*iso' /proc/cmdline >/dev/null
+if ! grep 'arch.*iso' /proc/cmdline >&3
+then
+    print "You are not running archiso, exiting."
+    exit 1
+fi
 
-print "Increasing cowspace to half of RAM"
+print "Increase cowspace to half of RAM"
 
-mount -o remount,size=50% /run/archiso/cowspace
+mount -o remount,size=50% /run/archiso/cowspace >&3
 
 # Init archzfs repository
-init_archzfs
+init_archzfs || exit 1
 
 # Search kernel package
 # https://github.com/archzfs/archzfs/issues/337#issuecomment-624312576
@@ -157,15 +211,13 @@ get_running_kernel_version
 kernel_version_fixed="${kernel_version//-/\.}"
 
 # Search zfs-linux package matching running kernel version
-search_package "zfs-linux" "$kernel_version_fixed"
-zfs_linux_url="$package_url"
-
-# If a package is found
-if [[ -n $zfs_linux_url ]]
+if search_package "zfs-linux" "$kernel_version_fixed"
 then
 
+    zfs_linux_url="$package_url"
+
     # Download package
-    download_package $zfs_linux_url
+    download_package "$zfs_linux_url" || exit 1
     zfs_linux_package="$package_file"
 
     print "Extracting zfs-utils version from zfs-linux PKGINFO"
@@ -174,17 +226,17 @@ then
     zfs_utils_version=$(bsdtar -qxO -f "$zfs_linux_package" .PKGINFO | grep -Po 'depend = zfs-utils=\K.*')
 
     # Search zfs-utils package matching zfs-linux package dependency
-    search_package "zfs-utils" "$zfs_utils_version"
-    zfs_utils_url="$package_url"
-
-    if [[ -n $zfs_utils_url ]]
+    if search_package "zfs-utils" "$zfs_utils_version"
     then
+        zfs_utils_url="$package_url"
 
         print "Installing zfs-utils and zfs-linux"
 
         # Install packages
-        pacman -U "$zfs_utils_url" --noconfirm &>/dev/null
-        pacman -U "$zfs_linux_package" --noconfirm &>/dev/null && zfs=1
+        if pacman -U "$zfs_utils_url" --noconfirm >&3 && pacman -U "$zfs_linux_package" --noconfirm >&3
+        then
+            zfs=1
+        fi
     fi
 else
 
@@ -195,8 +247,10 @@ else
     print "Install zfs-dkms"
     
     # Install package
-    pacman -S zfs-dkms --noconfirm &>/dev/null && zfs=1
-
+    if pacman -S zfs-dkms --noconfirm >&3
+    then
+        zfs=1
+    fi
 fi
 
 # Load kernel module
