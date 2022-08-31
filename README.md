@@ -37,6 +37,14 @@ To run the script in verbose mode, use:
 ```
 $ curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash -s -- -v
 ```
+Running the script produce a ``debug.log`` file.
+To upload this easily, you can
+
+```
+$ pacman -Syy pastebinit
+$ pastebinit -b sprunge.us debug.log
+```
+And then paste me the url in your issue.
 
 ### Dev
 
