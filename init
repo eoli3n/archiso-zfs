@@ -108,7 +108,8 @@ search_package () {
         print "Searching $1 on $url..."
     
         # Query url and try to match package
-        local package=$(curl -s "$url" | grep -Po "$regex" | tail -n 1)
+        local package
+        package=$(curl -s "$url" | grep -Po "$regex" | tail -n 1)
     
         # If a package is found
         if [[ -n $package ]]
@@ -134,9 +135,9 @@ download_package () {
     local filename="${1##*/}"
 
     # Download package in tmp
-    cd /tmp
+    cd /tmp || return 1
     curl -sO "$1" || return 1
-    cd -
+    cd - || return 1
 
     # Set out file
     package_file="/tmp/$filename"
@@ -144,8 +145,50 @@ download_package () {
     return 0
 }
 
-dkms_init () {
+zfslinux_install () {
+    # Search kernel package
+    # https://github.com/archzfs/archzfs/issues/337#issuecomment-624312576
+    get_running_kernel_version
+    kernel_version_fixed="${kernel_version//-/\.}"
+    
+    # Search zfs-linux package matching running kernel version
+    if search_package "zfs-linux" "$kernel_version_fixed"
+    then
+    
+        zfs_linux_url="$package_url"
+    
+        # Download package
+        download_package "$zfs_linux_url" || exit 1
+        zfs_linux_package="$package_file"
+    
+        print "Extracting zfs-utils version from zfs-linux PKGINFO"
+    
+        # Extract zfs-utils version from zfs-linux PKGINFO
+        zfs_utils_version=$(bsdtar -qxO -f "$zfs_linux_package" .PKGINFO | grep -Po 'depend = zfs-utils=\K.*')
+    
+        # Search zfs-utils package matching zfs-linux package dependency
+        if search_package "zfs-utils" "$zfs_utils_version"
+        then
+            zfs_utils_url="$package_url"
+    
+            print "Installing zfs-utils and zfs-linux"
+    
+            # Install packages
+            if pacman -U "$zfs_utils_url" --noconfirm >&3 && pacman -U "$zfs_linux_package" --noconfirm >&3
+            then
+                zfs=1
+            else
+                return 1
+            fi
+        fi
+    fi
+
+    return 0
+}
+
+dkms_install () {
 # Init everything to be able to install zfs-dkms
+    print "No zfs-linux package was found for current running kernel, fallback on DKMS method"
 
     print "Init Archlinux Archive repository"
     archiso_version=$(sed 's-\.-/-g' /version)
@@ -157,6 +200,15 @@ dkms_init () {
     print "Install base-devel"
     pacman -S --noconfirm base-devel linux-headers git >&3 || return 1
 
+    print "Install zfs-dkms"
+    
+    # Install package
+    if pacman -S zfs-dkms --noconfirm >&3
+    then
+        zfs=1
+    else
+        return 1
+    fi
     return 0
 }
 
@@ -205,53 +257,8 @@ mount -o remount,size=50% /run/archiso/cowspace >&3
 # Init archzfs repository
 init_archzfs || exit 1
 
-# Search kernel package
-# https://github.com/archzfs/archzfs/issues/337#issuecomment-624312576
-get_running_kernel_version
-kernel_version_fixed="${kernel_version//-/\.}"
-
-# Search zfs-linux package matching running kernel version
-if search_package "zfs-linux" "$kernel_version_fixed"
-then
-
-    zfs_linux_url="$package_url"
-
-    # Download package
-    download_package "$zfs_linux_url" || exit 1
-    zfs_linux_package="$package_file"
-
-    print "Extracting zfs-utils version from zfs-linux PKGINFO"
-
-    # Extract zfs-utils version from zfs-linux PKGINFO
-    zfs_utils_version=$(bsdtar -qxO -f "$zfs_linux_package" .PKGINFO | grep -Po 'depend = zfs-utils=\K.*')
-
-    # Search zfs-utils package matching zfs-linux package dependency
-    if search_package "zfs-utils" "$zfs_utils_version"
-    then
-        zfs_utils_url="$package_url"
-
-        print "Installing zfs-utils and zfs-linux"
-
-        # Install packages
-        if pacman -U "$zfs_utils_url" --noconfirm >&3 && pacman -U "$zfs_linux_package" --noconfirm >&3
-        then
-            zfs=1
-        fi
-    fi
-else
-
-    # DKMS fallback
-    print "No zfs-linux package was found for current running kernel, fallback on DKMS method"
-    dkms_init
-
-    print "Install zfs-dkms"
-    
-    # Install package
-    if pacman -S zfs-dkms --noconfirm >&3
-    then
-        zfs=1
-    fi
-fi
+# Install zfs-linux if found else fallback on dkms_install
+zfslinux_install || dkms_install || exit 1
 
 # Load kernel module
 if [[ "$zfs" == "1" ]]
