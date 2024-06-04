@@ -181,6 +181,8 @@ zfslinux_install () {
                 return 1
             fi
         fi
+    else
+        return 1
     fi
 
     return 0
