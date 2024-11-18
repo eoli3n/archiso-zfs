@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> 18 Nov. 2024: Archzfs is not up to date for now. zfs-dkms is 2.2.4, and it only builds on LTS. Archiso is shipped with main kernel 6.11. You need to use a custom archiso build on LTS with ZFS included.
+> See https://github.com/r-maerz/archlinux-lts-zfs
+
 ### Why this
 
 If you want to install Archlinux on ZFS, you need to deal with the [ZFS licensing problem](https://wiki.archlinux.org/index.php/ZFS). The kernel module isn't included in the default archiso image, you need to [include it](https://wiki.archlinux.org/index.php/ZFS#Embed_the_archzfs_packages_into_an_archiso) into a custom archiso image to be able to install ZFS.
