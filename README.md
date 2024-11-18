@@ -1,5 +1,5 @@
 > [!IMPORTANT]
-> 18 Nov. 2024: Archzfs is not up to date for now. zfs-dkms is 2.2.4, and it only builds on LTS. Archiso is shipped with main kernel 6.11. You need to use a custom archiso build on LTS with ZFS included.
+> 18 Nov. 2024 Archzfs is not up to date for now. zfs-dkms is 2.2.4, and it only builds on LTS. Archiso is shipped with main kernel 6.11. You need to use a custom archiso built on LTS with ZFS included.
 > See https://github.com/r-maerz/archlinux-lts-zfs
 
 ### Why this
